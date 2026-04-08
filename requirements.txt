@@ -1,0 +1,10 @@
+fastapi
+google-adk
+google-auth
+google-cloud-alloydb-connector
+google-cloud-bigquery
+google-cloud-storage
+pg8000
+python-dotenv
+uvicorn[standard]
+
