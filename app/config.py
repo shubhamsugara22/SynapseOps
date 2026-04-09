@@ -54,11 +54,12 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> "Settings":
+        resolved_port = _as_int(os.getenv("APP_PORT") or os.getenv("PORT"), cls.port)
         return cls(
             app_name=os.getenv("APP_NAME", cls.app_name),
             app_env=os.getenv("APP_ENV", cls.app_env),
             host=os.getenv("APP_HOST", cls.host),
-            port=_as_int(os.getenv("APP_PORT"), cls.port),
+            port=resolved_port,
             log_level=os.getenv("APP_LOG_LEVEL", cls.log_level),
             google_cloud_project=os.getenv("GOOGLE_CLOUD_PROJECT", ""),
             google_cloud_location=os.getenv("GOOGLE_CLOUD_LOCATION", cls.google_cloud_location),

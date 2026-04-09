@@ -63,6 +63,7 @@ The service starts on `http://127.0.0.1:8000` by default.
 - `GET /` basic service metadata
 - `GET /health` health response and configured integrations
 - `GET /mcp/servers` MCP server registry snapshot
+- `POST /agent/chat` simple agent endpoint (Gemini-backed when configured, fallback otherwise)
 - `POST /bigquery/query` execute a read-only BigQuery query
 - `POST /alloydb/query` execute a read-only AlloyDB query
 

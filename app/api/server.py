@@ -8,8 +8,10 @@ from app.config import Settings
 from app.db.alloydb import AlloyDBService
 from app.integrations.bigquery_client import BigQueryService
 from app.mcp.registry import registry_as_dict
+from app.schemas.agent import AgentChatRequest, AgentChatResponse
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.bootstrap import build_bootstrap_summary
+from app.services.simple_agent import SimpleAgentService
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -33,6 +35,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/mcp/servers")
     def mcp_servers() -> list[dict[str, object]]:
         return registry_as_dict(app_settings)
+
+    @app.post("/agent/chat", response_model=AgentChatResponse)
+    def agent_chat(request: AgentChatRequest) -> AgentChatResponse:
+        service = SimpleAgentService(app_settings)
+        try:
+            response_text, provider = service.chat(request.message)
+        except Exception as exc:  # pragma: no cover - runtime integration path
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+        return AgentChatResponse(
+            agent="simple-agent",
+            model=app_settings.adk_model,
+            response=response_text,
+            provider=provider,
+            session_id=request.session_id,
+        )
 
     @app.post("/bigquery/query", response_model=QueryResponse)
     def bigquery_query(request: QueryRequest) -> QueryResponse:
