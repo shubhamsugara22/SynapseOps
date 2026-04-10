@@ -86,4 +86,3 @@ The container listens on `PORT`, which defaults to `8080` in Cloud Run.
 - add Cloud Build or GitHub Actions deployment automation
 
 See `docs/lab-mapping.md` for the architecture notes derived from the codelabs.
-
