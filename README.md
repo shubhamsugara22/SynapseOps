@@ -20,15 +20,15 @@ This repo starts with a Python-first layout that can grow into a multi-agent ope
 
 ```text
 app/
-	agents/        ADK agent factories
-	api/           FastAPI service surface
-	db/            AlloyDB access layer
-	integrations/  BigQuery and cloud service clients
-	mcp/           MCP server registry and metadata
-	schemas/       Request and response models
-	services/      Bootstrap and orchestration helpers
-	utils/         Shared utilities
-	workflows/     Workflow definitions and roadmap metadata
+  agents/        ADK agent factories
+  api/           FastAPI service surface
+  db/            AlloyDB access layer
+  integrations/  BigQuery and cloud service clients
+  mcp/           MCP server registry and metadata
+  schemas/       Request and response models
+  services/      Bootstrap and orchestration helpers
+  utils/         Shared utilities
+  workflows/     Workflow definitions and roadmap metadata
 ```
 
 ## Quick Start
