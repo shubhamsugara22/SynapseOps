@@ -16,3 +16,14 @@ class AgentChatResponse(BaseModel):
     response: str
     provider: str
     session_id: str | None = None
+
+
+class AgentSessionMessage(BaseModel):
+    role: str
+    content: str
+
+
+class AgentSessionResponse(BaseModel):
+    session_id: str
+    messages: list[AgentSessionMessage]
+

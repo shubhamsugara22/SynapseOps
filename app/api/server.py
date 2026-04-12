@@ -2,13 +2,21 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 
 from app.config import Settings
 from app.db.alloydb import AlloyDBService
 from app.integrations.bigquery_client import BigQueryService
 from app.mcp.registry import registry_as_dict
-from app.schemas.agent import AgentChatRequest, AgentChatResponse
+from app.schemas.agent import (
+    AgentChatRequest,
+    AgentChatResponse,
+    AgentSessionMessage,
+    AgentSessionResponse,
+)
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.bootstrap import build_bootstrap_summary
 from app.services.simple_agent import SimpleAgentService
@@ -40,7 +48,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def agent_chat(request: AgentChatRequest) -> AgentChatResponse:
         service = SimpleAgentService(app_settings)
         try:
-            response_text, provider = service.chat(request.message)
+            response_text, provider, resolved_session_id = service.chat(
+                request.message,
+                session_id=request.session_id,
+            )
         except Exception as exc:  # pragma: no cover - runtime integration path
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -49,7 +60,33 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             model=app_settings.adk_model,
             response=response_text,
             provider=provider,
-            session_id=request.session_id,
+            session_id=resolved_session_id,
+        )
+
+    @app.post("/agent/chat/stream")
+    def agent_chat_stream(request: AgentChatRequest) -> StreamingResponse:
+        service = SimpleAgentService(app_settings)
+
+        def event_stream() -> Iterator[str]:
+            try:
+                for chunk in service.stream_chat(request.message, session_id=request.session_id):
+                    yield f"data: {chunk}\n\n"
+                yield "event: done\ndata: [DONE]\n\n"
+            except Exception as exc:  # pragma: no cover - runtime integration path
+                yield f"event: error\ndata: {str(exc)}\n\n"
+
+        return StreamingResponse(event_stream(), media_type="text/event-stream")
+
+    @app.get("/agent/sessions/{session_id}", response_model=AgentSessionResponse)
+    def get_agent_session(session_id: str) -> AgentSessionResponse:
+        service = SimpleAgentService(app_settings)
+        messages = [
+            AgentSessionMessage(role=msg.role, content=msg.content)
+            for msg in service.get_session_messages(session_id)
+        ]
+        return AgentSessionResponse(
+            session_id=session_id,
+            messages=messages,
         )
 
     @app.post("/bigquery/query", response_model=QueryResponse)
