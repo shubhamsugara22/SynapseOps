@@ -54,46 +54,47 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> "Settings":
-        resolved_port = _as_int(os.getenv("APP_PORT") or os.getenv("PORT"), cls.port)
+        defaults = cls()
+        resolved_port = _as_int(os.getenv("APP_PORT") or os.getenv("PORT"), defaults.port)
         return cls(
-            app_name=os.getenv("APP_NAME", cls.app_name),
-            app_env=os.getenv("APP_ENV", cls.app_env),
-            host=os.getenv("APP_HOST", cls.host),
+            app_name=os.getenv("APP_NAME", defaults.app_name),
+            app_env=os.getenv("APP_ENV", defaults.app_env),
+            host=os.getenv("APP_HOST", defaults.host),
             port=resolved_port,
-            log_level=os.getenv("APP_LOG_LEVEL", cls.log_level),
+            log_level=os.getenv("APP_LOG_LEVEL", defaults.log_level),
             google_cloud_project=os.getenv("GOOGLE_CLOUD_PROJECT", ""),
-            google_cloud_location=os.getenv("GOOGLE_CLOUD_LOCATION", cls.google_cloud_location),
+            google_cloud_location=os.getenv("GOOGLE_CLOUD_LOCATION", defaults.google_cloud_location),
             google_genai_use_vertexai=_as_bool(
                 os.getenv("GOOGLE_GENAI_USE_VERTEXAI"),
-                cls.google_genai_use_vertexai,
+                defaults.google_genai_use_vertexai,
             ),
             google_api_key=os.getenv("GOOGLE_API_KEY", ""),
-            adk_model=os.getenv("ADK_MODEL", cls.adk_model),
+            adk_model=os.getenv("ADK_MODEL", defaults.adk_model),
             bigquery_project=os.getenv("BIGQUERY_PROJECT", ""),
-            bigquery_location=os.getenv("BIGQUERY_LOCATION", cls.bigquery_location),
+            bigquery_location=os.getenv("BIGQUERY_LOCATION", defaults.bigquery_location),
             bigquery_default_query=os.getenv(
                 "BIGQUERY_DEFAULT_QUERY",
-                cls.bigquery_default_query,
+                defaults.bigquery_default_query,
             ),
             alloydb_instance=os.getenv("ALLOYDB_INSTANCE", ""),
             alloydb_user=os.getenv("ALLOYDB_USER", ""),
             alloydb_password=os.getenv("ALLOYDB_PASSWORD", ""),
-            alloydb_database=os.getenv("ALLOYDB_DATABASE", cls.alloydb_database),
+            alloydb_database=os.getenv("ALLOYDB_DATABASE", defaults.alloydb_database),
             alloydb_enable_iam_auth=_as_bool(
                 os.getenv("ALLOYDB_ENABLE_IAM_AUTH"),
-                cls.alloydb_enable_iam_auth,
+                defaults.alloydb_enable_iam_auth,
             ),
-            alloydb_ip_type=os.getenv("ALLOYDB_IP_TYPE", cls.alloydb_ip_type),
-            alloydb_default_query=os.getenv("ALLOYDB_DEFAULT_QUERY", cls.alloydb_default_query),
+            alloydb_ip_type=os.getenv("ALLOYDB_IP_TYPE", defaults.alloydb_ip_type),
+            alloydb_default_query=os.getenv("ALLOYDB_DEFAULT_QUERY", defaults.alloydb_default_query),
             mcp_bigquery_toolbox_url=os.getenv("MCP_BIGQUERY_TOOLBOX_URL", ""),
             mcp_google_maps_url=os.getenv("MCP_GOOGLE_MAPS_URL", ""),
             mcp_bigquery_enabled=_as_bool(
                 os.getenv("MCP_BIGQUERY_ENABLED"),
-                cls.mcp_bigquery_enabled,
+                defaults.mcp_bigquery_enabled,
             ),
             mcp_maps_enabled=_as_bool(
                 os.getenv("MCP_MAPS_ENABLED"),
-                cls.mcp_maps_enabled,
+                defaults.mcp_maps_enabled,
             ),
         )
 
