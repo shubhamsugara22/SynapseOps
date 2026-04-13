@@ -39,14 +39,6 @@ class Settings:
         "WHERE state = 'CA' LIMIT 10"
     )
 
-    alloydb_instance: str = ""
-    alloydb_user: str = ""
-    alloydb_password: str = ""
-    alloydb_database: str = "postgres"
-    alloydb_enable_iam_auth: bool = False
-    alloydb_ip_type: str = "PSC"
-    alloydb_default_query: str = "SELECT NOW() AS current_time"
-
     mcp_bigquery_toolbox_url: str = ""
     mcp_google_maps_url: str = ""
     mcp_bigquery_enabled: bool = True
@@ -76,16 +68,6 @@ class Settings:
                 "BIGQUERY_DEFAULT_QUERY",
                 defaults.bigquery_default_query,
             ),
-            alloydb_instance=os.getenv("ALLOYDB_INSTANCE", ""),
-            alloydb_user=os.getenv("ALLOYDB_USER", ""),
-            alloydb_password=os.getenv("ALLOYDB_PASSWORD", ""),
-            alloydb_database=os.getenv("ALLOYDB_DATABASE", defaults.alloydb_database),
-            alloydb_enable_iam_auth=_as_bool(
-                os.getenv("ALLOYDB_ENABLE_IAM_AUTH"),
-                defaults.alloydb_enable_iam_auth,
-            ),
-            alloydb_ip_type=os.getenv("ALLOYDB_IP_TYPE", defaults.alloydb_ip_type),
-            alloydb_default_query=os.getenv("ALLOYDB_DEFAULT_QUERY", defaults.alloydb_default_query),
             mcp_bigquery_toolbox_url=os.getenv("MCP_BIGQUERY_TOOLBOX_URL", ""),
             mcp_google_maps_url=os.getenv("MCP_GOOGLE_MAPS_URL", ""),
             mcp_bigquery_enabled=_as_bool(
@@ -104,5 +86,4 @@ class Settings:
     def as_public_dict(self) -> dict[str, object]:
         data = asdict(self)
         data["google_api_key"] = "configured" if self.google_api_key else ""
-        data["alloydb_password"] = "configured" if self.alloydb_password else ""
         return data

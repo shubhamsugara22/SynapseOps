@@ -7,7 +7,7 @@ def get_workflow_outline() -> dict[str, list[str]]:
     return {
         "ingest": [
             "Load operational and reference data into BigQuery.",
-            "Store transactional and operational state in AlloyDB.",
+            "Expose selected datasets through MCP Toolbox for Databases.",
         ],
         "reason": [
             "Use the ADK root agent to route requests to read-only tools.",
@@ -15,7 +15,7 @@ def get_workflow_outline() -> dict[str, list[str]]:
         ],
         "enrich": [
             "Attach remote MCP servers for BigQuery Toolbox and Maps.",
-            "Push semantic search and in-database AI patterns into AlloyDB later.",
+            "Add tool-level safeguards, schema-aware prompting, and routing policies.",
         ],
         "deploy": [
             "Run locally with FastAPI during development.",

@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any
 
 from app.config import Settings
-from app.db.alloydb import run_alloydb_sql_tool
 from app.integrations.bigquery_client import run_bigquery_sql_tool
 from app.mcp.registry import registry_as_dict
 
@@ -28,13 +27,12 @@ def build_root_agent(settings: Settings | None = None) -> Any:
         model=settings.adk_model,
         instruction=(
             "You are SynapseOps, an operations and analytics agent built on Google Cloud. "
-            "Use BigQuery for analytical read-only questions, use AlloyDB for transactional "
-            "read-only lookups, and consult MCP registry metadata before assuming an external "
+            "Use BigQuery for analytical read-only questions and consult MCP registry metadata "
+            "before assuming an external "
             "capability exists. Be explicit about missing configuration."
         ),
         tools=[
             run_bigquery_sql_tool,
-            run_alloydb_sql_tool,
             list_mcp_servers,
         ],
     )

@@ -6,13 +6,12 @@ Starter repository for a Google Cloud agent system built from these codelab trac
 - ADK deployment to Cloud Run
 - MCP-based BigQuery and Google Maps tooling
 - MCP Toolbox for Databases with BigQuery datasets
-- AlloyDB setup and AlloyDB AI integration patterns
 
 This repo starts with a Python-first layout that can grow into a multi-agent operations platform. The current scaffold gives you:
 
 - a Cloud Run-friendly FastAPI entrypoint
 - an ADK root agent factory
-- read-only BigQuery and AlloyDB tool wrappers
+- read-only BigQuery tool wrappers
 - MCP server registry placeholders for BigQuery Toolbox and Maps
 - environment-driven configuration
 
@@ -22,7 +21,6 @@ This repo starts with a Python-first layout that can grow into a multi-agent ope
 app/
   agents/        ADK agent factories
   api/           FastAPI service surface
-  db/            AlloyDB access layer
   integrations/  BigQuery and cloud service clients
   mcp/           MCP server registry and metadata
   schemas/       Request and response models
@@ -56,7 +54,6 @@ The service starts on `http://127.0.0.1:8000` by default.
 - ADK Cloud Run Deployment: `deployment/Dockerfile` and `app/main.py` provide the service bootstrap path.
 - ADK + MCP + BigQuery + Maps: `app/mcp/registry.py` and `app/integrations/bigquery_client.py` establish the starter integration points.
 - MCP Toolbox for Databases: `MCP_BIGQUERY_TOOLBOX_URL` in `.env.example` is the handoff point for a remote MCP toolbox endpoint.
-- AlloyDB setup and AI app labs: `app/db/alloydb.py` and `ALLOYDB_*` env vars prepare the relational and AI-data layer.
 
 ## Current Endpoints
 
@@ -67,7 +64,6 @@ The service starts on `http://127.0.0.1:8000` by default.
 - `POST /agent/chat/stream` server-sent events stream endpoint for token-like output
 - `GET /agent/sessions/{session_id}` inspect in-memory session message history
 - `POST /bigquery/query` execute a read-only BigQuery query
-- `POST /alloydb/query` execute a read-only AlloyDB query
 
 ## Cloud Run Starter
 
@@ -84,7 +80,7 @@ The container listens on `PORT`, which defaults to `8080` in Cloud Run.
 
 - replace placeholder MCP URLs with real BigQuery Toolbox and Maps endpoints
 - add ADK session management and streaming responses
-- add AlloyDB AI SQL workflows for semantic retrieval and recommendation logic
+- add direct MCP tool invocation flow for BigQuery toolbox endpoints
 - add Cloud Build or GitHub Actions deployment automation
 
 See `docs/lab-mapping.md` for the architecture notes derived from the codelabs.

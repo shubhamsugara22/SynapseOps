@@ -56,25 +56,9 @@ Mapped files:
 - `.env.example`
 - `app/mcp/registry.py`
 
-## AlloyDB Setup and AI App
-
-Use the AlloyDB labs as the data-plane direction:
-
-- PostgreSQL-compatible transactional storage
-- secure connector-based access
-- AI functions and embeddings can move closer to SQL later
-- Cloud Run remains a valid application host
-
-Mapped files:
-
-- `app/db/alloydb.py`
-- `.env.example`
-- `app/workflows/synapse_flow.py`
-
 ## Recommended Sequence
 
 1. Fill in `.env` and verify BigQuery access locally.
 2. Stand up the MCP Toolbox for BigQuery and add its endpoint.
 3. Create the first remote Maps MCP server entry.
-4. Provision AlloyDB and validate a read-only query through the connector.
-5. Expand the ADK root agent into multiple specialized agents.
+4. Expand the ADK root agent into multiple specialized agents.

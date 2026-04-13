@@ -8,7 +8,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 
 from app.config import Settings
-from app.db.alloydb import AlloyDBService
 from app.integrations.bigquery_client import BigQueryService
 from app.mcp.registry import registry_as_dict
 from app.schemas.agent import (
@@ -36,7 +35,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "status": "ok",
             "environment": app_settings.app_env,
             "google_auth_configured": app_settings.has_google_auth(),
-            "alloydb_configured": AlloyDBService(app_settings).is_configured(),
             "mcp_servers": registry_as_dict(app_settings),
         }
 
@@ -97,14 +95,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except Exception as exc:  # pragma: no cover - runtime integration path
             raise HTTPException(status_code=400, detail=str(exc)) from exc
         return QueryResponse(service="bigquery", rows=rows)
-
-    @app.post("/alloydb/query", response_model=QueryResponse)
-    def alloydb_query(request: QueryRequest) -> QueryResponse:
-        service = AlloyDBService(app_settings)
-        try:
-            rows = service.run_query(request.sql)
-        except Exception as exc:  # pragma: no cover - runtime integration path
-            raise HTTPException(status_code=400, detail=str(exc)) from exc
-        return QueryResponse(service="alloydb", rows=rows)
 
     return app
